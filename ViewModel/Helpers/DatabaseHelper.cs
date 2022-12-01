@@ -77,6 +77,8 @@ namespace EvernoteClone.ViewModel.Helpers
         }
 
 
+        /* Posto je u conn.Table<T>() potrebno da je T "non-abstract type with a public parameterless constructor"
+           kako bi smo koristili parametar T u generic metodi SQLiteConection.Table<T> onda cemo na pocetku metode dodati : new() */ 
         public static List<T> Read<T>() where T : new()
         {
             List<T> items;
