@@ -1,4 +1,5 @@
 ﻿using EvernoteClone.ViewModel.Commands;
+using EvernoteClone.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,6 +36,30 @@ namespace EvernoteClone.ViewModel
 		{
 			NewNotebookCommand = new NewNotebookCommand(this);
 			NewNoteCommand = new NewNoteCommand(this);
+		}
+
+		public void CreateNotebook()
+		{
+			Notebook newNotebook = new Notebook()
+			{
+				Name = "New notebook"
+			};
+
+            DatabaseHelper.Insert(newNotebook);
+        }
+
+		public void CreateNote( int notebookId)
+		{
+			Note newNote = new Note()
+			{
+				NotebookId = notebookId,
+				CreatedTime = DateTime.Now,
+				UpdatedTime = DateTime.Now,
+				Title = "New note"
+			};
+
+			DatabaseHelper.Insert(newNote);
+
 		}
 	}
 }
