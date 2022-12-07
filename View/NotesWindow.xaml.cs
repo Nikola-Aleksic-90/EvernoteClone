@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -29,11 +30,6 @@ namespace EvernoteClone.View
             Application.Current.Shutdown();
         }
 
-        private void SpeechButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void contentRichTextbox_TextChanged(object sender, TextChangedEventArgs e)
         {
             int amountCharacters = (new TextRange(contentRichTextbox.Document.ContentStart, contentRichTextbox.Document.ContentEnd)).Text.Length;
@@ -42,7 +38,18 @@ namespace EvernoteClone.View
 
         private void boldButton_Click(object sender, RoutedEventArgs e)
         {
-            contentRichTextbox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Bold);
+            bool isButtonChecked = (sender as ToggleButton).IsChecked ?? false;
+
+            if (isButtonChecked)
+                contentRichTextbox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Bold);
+            else
+                contentRichTextbox.Selection.ApplyPropertyValue(Inline.FontWeightProperty, FontWeights.Normal);
+        }
+
+        private void contentRichTextbox_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            var selectedWeight = contentRichTextbox.Selection.GetPropertyValue(FontWeightProperty);
+            boldButton.IsChecked = (selectedWeight != DependencyProperty.UnsetValue && selectedWeight.Equals(FontWeights.Bold));
         }
     }
 }
