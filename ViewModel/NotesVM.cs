@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using WpfApp1.Model;
 
 namespace EvernoteClone.ViewModel
@@ -27,20 +28,36 @@ namespace EvernoteClone.ViewModel
 			}
 		}
 
+		private Visibility isVisible;
+		public Visibility IsVisible
+		{
+			get { return isVisible; }
+			set 
+			{ 
+				isVisible = value;
+				OnPropertyChanged("IsVisible");
+			}
+		}
+
 		// dobicemo Notes svaki put kada se SelectedNotebook promeni i sacuvacemo ih u ovoj ObservableCollection
 		public ObservableCollection<Note> Notes { get; set; }
 
 		public NewNotebookCommand NewNotebookCommand { get; set; }
 		public NewNoteCommand NewNoteCommand { get; set; }
+		public EditCommand EditCommand { get; set; }
 
 		// Implementacija interfejsa INotifyPropertyChanged
-        public event PropertyChangedEventHandler? PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
         // konstruktor
         public NotesVM()
 		{
 			NewNotebookCommand = new NewNotebookCommand(this);
 			NewNoteCommand = new NewNoteCommand(this);
+			EditCommand = new EditCommand(this);
+
+			// pri pokretanju zelimo da je Collapsed
+			IsVisible = Visibility.Collapsed;
 
 			/* Zelimo da imamo inicijalnu vrednost, tj. zelimo da se pri pokretanju
 			   prikazu sve kreirane Notebooks */
@@ -114,6 +131,12 @@ namespace EvernoteClone.ViewModel
 		private void OnPropertyChanged(string propertyName)
 		{
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		// metoda da se preimenuju nazivi Notebook-ova
+		public void StartEditing()
+		{
+			IsVisible = Visibility.Visible;
 		}
     }
 }

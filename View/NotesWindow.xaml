@@ -42,8 +42,23 @@
                   ItemsSource="{Binding Notebooks}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <!-- Bind-ujemo ceo objekat za Notebook property-->
-                    <uc:DisplayNotebook Notebook="{Binding}"/>
+                    <Grid>
+                        <!-- Bind-ujemo ceo objekat za Notebook property-->
+                        <uc:DisplayNotebook Notebook="{Binding}">
+                            <uc:DisplayNotebook.ContextMenu>
+                                <ContextMenu>
+                                    <!-- StaticResource vm tri reda ispod se odnosi na Window.Resource na samom pocetku XAML-->
+                                    <!-- Moramo ovako jer je po default-u to Notebooks (za ovaj ListView)-->
+                                    <MenuItem Header="Rename"
+                                              Command="{Binding Source={StaticResource vm}, Path=EditCommand}"/>
+                                </ContextMenu>
+                            </uc:DisplayNotebook.ContextMenu>
+                        </uc:DisplayNotebook>
+                        
+                        <!-- Ovaj TextBox ce se pojaviti kada zelimo da preimenujemo naziv Notebook-a-->
+                        <TextBox Text ="{Binding Name}"  
+                                 Visibility="{Binding Source={StaticResource vm}, Path=IsVisible}"/>
+                    </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
