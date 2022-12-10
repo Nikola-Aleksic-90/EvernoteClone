@@ -43,6 +43,25 @@ namespace EvernoteClone.View
             fontSizeComboBox.ItemsSource = fontSizes;
         }
 
+        /*
+        App klasa je uvek dostupna kada aplikacija radi tako da uvek imamo pristup varijablama koje su tamo. 
+        Da bi otvorili Login kada korisnik nije ulogovan u App.xaml.cs kreiracemo public varijablu UserId kao empty string i pristupicemo iz NotesWindow-a. 
+        Tamo cemo videti kroz if petlju da li je string null ili ako je prazan. 
+        Ovako znamo da korisnik nije ulogovan te cemo prikazati LoginWindow.
+        */
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+
+            if (string.IsNullOrEmpty(App.UserId))
+            {
+                LoginWindow loginWindow= new LoginWindow();
+                loginWindow.ShowDialog();
+
+                viewModel.GetNotebooks();
+            }
+        }
+
         private void ViewModel_SelectedNoteChanged(object? sender, EventArgs e)
         {
             contentRichTextbox.Document.Blocks.Clear();

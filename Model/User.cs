@@ -11,7 +11,6 @@ namespace WpfApp1.Model
     public class User : INotifyPropertyChanged
     {
         private int id;
-        [PrimaryKey, AutoIncrement]
         public int Id
         {
             get { return id; }
@@ -23,7 +22,6 @@ namespace WpfApp1.Model
         }
 
         private string name;
-        [MaxLength(50)]
         public string Name
         {
             get { return name; }
@@ -35,7 +33,6 @@ namespace WpfApp1.Model
         }
 
         private string lastname;
-        [MaxLength(50)]
         public string Lastname
         {
             get { return lastname; }
@@ -79,6 +76,18 @@ namespace WpfApp1.Model
                 OnPropertyChanged("Password");
             }
         }
+
+        private string confirmPassword;
+        public string ConfirmPassword
+        {
+            get { return confirmPassword; }
+            set 
+            { 
+                confirmPassword = value;
+                OnPropertyChanged("ConfirmPassword");
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
