@@ -28,6 +28,18 @@ namespace EvernoteClone.ViewModel
 			}
 		}
 
+		private Note selectedNote;
+		public Note SelectedNote
+		{
+			get { return selectedNote; }
+			set 
+			{
+                selectedNote = value;
+                OnPropertyChanged("SelectedNote");
+				SelectedNoteChanged?.Invoke(this, new EventArgs());
+            }
+		}
+
 		private Visibility isVisible;
 		public Visibility IsVisible
 		{
@@ -49,6 +61,8 @@ namespace EvernoteClone.ViewModel
 
 		// Implementacija interfejsa INotifyPropertyChanged
 		public event PropertyChangedEventHandler? PropertyChanged;
+
+		public event EventHandler SelectedNoteChanged;
 
         // konstruktor
         public NotesVM()

@@ -11,7 +11,10 @@
         Title="NotesWindow" Height="450" Width="800">
 
     <Window.Resources>
-        <vm:NotesVM x:Key="vm"/>
+        <ResourceDictionary>
+            <!-- Definisemo instancu NotesVM klase -->
+            <vm:NotesVM x:Key="vm"/>
+        </ResourceDictionary>
     </Window.Resources>
     
     <DockPanel DataContext="{StaticResource vm}">
@@ -38,7 +41,7 @@
 
         <ListView DockPanel.Dock="Left"
                   Background="MidnightBlue"
-                  Width="140"
+                  Width="200"
                   SelectedValue="{Binding SelectedNotebook, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   ItemsSource="{Binding Notebooks}">
             <ListView.ItemTemplate>
@@ -72,7 +75,8 @@
         </ListView>
 
         <ListView DockPanel.Dock="Left"
-                  Width="140"
+                  Width="200"
+                  SelectedValue="{Binding SelectedNote, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   ItemsSource="{Binding Notes}">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -106,6 +110,8 @@
                           Width="50"
                           IsEditable="True"
                           TextBoxBase.TextChanged="fontSizeComboBox_TextChanged"/>
+                <Button Content="Save"
+                        Click="Button_Click"/>
 
             </ToolBar>
         </ToolBarTray>

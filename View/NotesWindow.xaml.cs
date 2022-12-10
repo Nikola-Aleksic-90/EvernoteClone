@@ -1,5 +1,8 @@
-﻿using System;
+﻿using EvernoteClone.ViewModel;
+using EvernoteClone.ViewModel.Helpers;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +23,15 @@ namespace EvernoteClone.View
     /// </summary>
     public partial class NotesWindow : Window
     {
+        NotesVM viewModel;
+
         public NotesWindow()
         {
             InitializeComponent();
+
+            viewModel = Resources["vm"] as NotesVM;
+            viewModel.SelectedNoteChanged += ViewModel_SelectedNoteChanged;
+
 
             // Dodat je spisak za Combobox za izbor fontova
             var fontFamilies = Fonts.SystemFontFamilies.OrderBy(f => f.Source);
@@ -32,6 +41,23 @@ namespace EvernoteClone.View
             // U XAML-u je stavljeno da je IsEditeble=true da korisnik moze da unese svoju velicinu fonta, npr 13 kojeg nema na spisku ispod
             List<double> fontSizes = new List<double>() { 8, 9, 10, 11, 12, 14, 16, 24, 32 };
             fontSizeComboBox.ItemsSource = fontSizes;
+        }
+
+        private void ViewModel_SelectedNoteChanged(object? sender, EventArgs e)
+        {
+            contentRichTextbox.Document.Blocks.Clear();
+
+            if (viewModel.SelectedNote != null)
+            {
+                if (!string.IsNullOrEmpty(viewModel.SelectedNote.FileLocation))
+                {
+                    using (FileStream fileStream = new FileStream(viewModel.SelectedNote.FileLocation, FileMode.Open))
+                    {
+                        TextRange range = new TextRange(contentRichTextbox.Document.ContentStart, contentRichTextbox.Document.ContentEnd);
+                        range.Load(fileStream, DataFormats.Rtf);
+                    }
+                }
+            }            
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
@@ -105,6 +131,17 @@ namespace EvernoteClone.View
         private void fontSizeComboBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             contentRichTextbox.Selection.ApplyPropertyValue(Inline.FontSizeProperty, fontSizeComboBox.Text);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, $"{viewModel.SelectedNote.Id}.rtf");
+            viewModel.SelectedNote.FileLocation = rtfFile;
+            DatabaseHelper.Update(viewModel.SelectedNote);
+
+            FileStream fileStream = new FileStream(rtfFile, FileMode.Create);
+            var contents = new TextRange(contentRichTextbox.Document.ContentStart, contentRichTextbox.Document.ContentEnd);
+            contents.Save(fileStream, DataFormats.Rtf);
         }
     }
 }
