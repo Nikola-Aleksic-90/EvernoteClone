@@ -45,6 +45,7 @@ namespace EvernoteClone.ViewModel
 		public NewNotebookCommand NewNotebookCommand { get; set; }
 		public NewNoteCommand NewNoteCommand { get; set; }
 		public EditCommand EditCommand { get; set; }
+		public EndEditingCommand EndEditingCommand { get; set; }
 
 		// Implementacija interfejsa INotifyPropertyChanged
 		public event PropertyChangedEventHandler? PropertyChanged;
@@ -55,6 +56,7 @@ namespace EvernoteClone.ViewModel
 			NewNotebookCommand = new NewNotebookCommand(this);
 			NewNoteCommand = new NewNoteCommand(this);
 			EditCommand = new EditCommand(this);
+			EndEditingCommand= new EndEditingCommand(this);
 
 			// pri pokretanju zelimo da je Collapsed
 			IsVisible = Visibility.Collapsed;
@@ -138,5 +140,13 @@ namespace EvernoteClone.ViewModel
 		{
 			IsVisible = Visibility.Visible;
 		}
+
+		// Metoda da se snime izmene naziva Notebook-ova
+        public void StopEditing(Notebook notebook)
+        {
+            IsVisible = Visibility.Collapsed;
+			DatabaseHelper.Update(notebook);
+            GetNotebooks();
+        }
     }
 }
