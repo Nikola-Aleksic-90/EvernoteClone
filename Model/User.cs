@@ -88,7 +88,6 @@ namespace EvernoteClone.Model
             }
         }
 
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string propertyName)

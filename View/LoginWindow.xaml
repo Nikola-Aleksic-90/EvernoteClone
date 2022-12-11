@@ -16,9 +16,9 @@
     </Window.Resources>
     
     <Grid DataContext="{StaticResource vm}">
+        
         <StackPanel Visibility="{Binding LoginVis}"
                     Margin="10">
-            
             <TextBlock Text="Username:"/>
             <TextBox Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Text="Password:"/>
@@ -27,22 +27,21 @@
                     CommandParameter="{Binding User}"
                     Margin="0,5"
                     Content="Login"/>
-
             <TextBlock Text="Register"
                        Foreground="DodgerBlue"
-                       TextDecorations="Underline"/>
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseLeftButtonDown">
-                    <i:InvokeCommandAction Command="{Binding ShowRegisterCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
+                       TextDecorations="Underline">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                        <i:InvokeCommandAction Command="{Binding ShowRegisterCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TextBlock>
         </StackPanel>
         
         <StackPanel Visibility="{Binding RegisterVis}"
-                    Margin="10">
-
+                    Margin="10,0">
             <TextBlock Text="Username:"/>
-            <TextBox Text="{Binding User, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Text="Name:"/>
             <TextBox Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Text="Lastname:"/>
@@ -55,15 +54,15 @@
                     CommandParameter="{Binding User}"
                     Margin="0,5"
                     Content="Register"/>
-
             <TextBlock Text="Login"
                        Foreground="DodgerBlue"
-                       TextDecorations="Underline"/>
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseLeftButtonDown">
-                    <i:InvokeCommandAction Command="{Binding ShowRegisterCommand}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
+                       TextDecorations="Underline">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                        <i:InvokeCommandAction Command="{Binding ShowRegisterCommand}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TextBlock>
         </StackPanel>
         
     </Grid>

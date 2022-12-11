@@ -35,7 +35,6 @@ namespace EvernoteClone.Model
         }
 
         private string title;
-
         public string Title
         {
             get { return title; }
@@ -47,7 +46,6 @@ namespace EvernoteClone.Model
         }
 
         private DateTime createdTime;
-
         public DateTime CreatedTime
         {
             get { return createdTime; }
@@ -59,7 +57,6 @@ namespace EvernoteClone.Model
         }
 
         private DateTime updatedTime;
-
         public DateTime UpdatedTime
         {
             get { return updatedTime; }
@@ -71,7 +68,6 @@ namespace EvernoteClone.Model
         }
 
         private string fileLocation;
-
         public string FileLocation
         {
             get { return fileLocation; }
