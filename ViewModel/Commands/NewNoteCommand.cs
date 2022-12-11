@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using WpfApp1.Model;
+using EvernoteClone.Model;
 
 namespace EvernoteClone.ViewModel.Commands
 {

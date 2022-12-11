@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WpfApp1.Model
+namespace EvernoteClone.Model
 {
     public class User : INotifyPropertyChanged
     {
