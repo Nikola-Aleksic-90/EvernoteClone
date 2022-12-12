@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using EvernoteClone.Model;
+using EvernoteClone.ViewModel.Helpers;
 
 namespace EvernoteClone.ViewModel
 {
@@ -184,9 +185,9 @@ namespace EvernoteClone.ViewModel
 			// TODO Login
 		}
 
-        public void Register()
+        public async void Register()
         {
-            // TODO Register
+            await FirebaseAuthHelper.Register(User);
         }
 
         private void OnPropertyChanged(string propertyName)
