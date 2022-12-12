@@ -19,7 +19,7 @@
         
         <StackPanel Visibility="{Binding LoginVis}"
                     Margin="10">
-            <TextBlock Text="Email:"/>
+            <TextBlock Text="Username:"/>
             <TextBox Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Text="Password:"/>
             <TextBox Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -40,7 +40,7 @@
         
         <StackPanel Visibility="{Binding RegisterVis}"
                     Margin="10,0">
-            <TextBlock Text="Email:"/>
+            <TextBlock Text="Username:"/>
             <TextBox Text="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             <TextBlock Text="Name:"/>
             <TextBox Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
