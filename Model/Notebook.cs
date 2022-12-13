@@ -22,9 +22,9 @@ namespace EvernoteClone.Model
             }
         }
 
-        private int userId;
+        private string userId;
         [Indexed]
-        public int UserId
+        public string UserId
         {
             get { return userId; }
             set
