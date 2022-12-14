@@ -1,8 +1,10 @@
-﻿using SQLite;
+﻿using Newtonsoft.Json;
+using SQLite;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,8 +15,13 @@ namespace EvernoteClone.ViewModel.Helpers
         // Environment.CurrentDirectory pokazuje na lokaciju gde ce se nalaziti nas projekat
         private static string dbFile = Path.Combine(Environment.CurrentDirectory, "notesDb.db3");
 
+        // Od sada koristimo Google Firebase Realtime Database
+        private static string dbPath = "https://notes-app-wpf-191ef-default-rtdb.europe-west1.firebasedatabase.app/";
+
         // Genericka metoda za ubacivanje bilo kog objekta u svoju tabelu
         // Ovakva metoda se moze koristiti i za User i za Note i za Notebook
+        // Kod ispod je za lokalnu SQLite database i bice izkomentarisan jer od sada koristimo Google Firebase
+        /*
         public static bool Insert<T>(T item)
         {
             bool result = false;
@@ -35,7 +42,23 @@ namespace EvernoteClone.ViewModel.Helpers
 
             return result;
         }
+        */
 
+        // Google Firebase 
+        public static async Task<bool> Insert<T>(T item)
+        {
+            string jsonBody = JsonConvert.SerializeObject(item);
+            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
+            
+            using(var client = new HttpClient())
+            {
+                // item.GetType().Name.ToLower() koristimo jer ne znamo sta prosledjujemo (Notebook, Note ...) a ToLower je da se sve pise malim slovima
+                var result = await client.PostAsync($"{dbPath}{item.GetType().Name.ToLower()}.json", content);
+
+                if (result.IsSuccessStatusCode) return true;
+                else return false;
+            }
+        }
 
         public static bool Update<T>(T item)
         {
