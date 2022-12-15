@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using EvernoteClone.Model;
+using Newtonsoft.Json;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -99,9 +100,10 @@ namespace EvernoteClone.ViewModel.Helpers
             return result;
         }
 
-
+        // Sqlite
         /* Posto je u conn.Table<T>() potrebno da je T "non-abstract type with a public parameterless constructor"
-           kako bi smo koristili parametar T u generic metodi SQLiteConection.Table<T> onda cemo na pocetku metode dodati : new() */ 
+           kako bi smo koristili parametar T u generic metodi SQLiteConection.Table<T> onda cemo na pocetku metode dodati : new() */
+        /*
         public static List<T> Read<T>() where T : new()
         {
             List<T> items;
@@ -113,6 +115,33 @@ namespace EvernoteClone.ViewModel.Helpers
             }
 
             return items;
+        }
+        */
+
+        // Google Firebase
+        // Vidi lekciju 109 za objasnjenja oko Dictionary
+        public static async Task<List<T>> Read<T>() where T : HasId
+        {
+            using( var client = new HttpClient())
+            {
+                var result = await client.GetAsync($"{dbPath}{typeof(T).Name.ToLower()}.json");
+                var jsonResult = await result.Content.ReadAsStringAsync();
+
+                if (result.IsSuccessStatusCode)
+                {
+                    var objects = JsonConvert.DeserializeObject<Dictionary<string, T>>(jsonResult);
+
+                    List<T> list = new List<T>();
+                    foreach(var o in objects)
+                    {
+                        o.Value.Id = o.Key;
+                        list.Add(o.Value);
+                    }
+
+                    return list;
+                }
+                else return null;
+            }
         }
 
     }

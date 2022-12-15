@@ -97,8 +97,9 @@ namespace EvernoteClone.ViewModel
         }
 
         // Dodajemo async da sacekamo odgovor od HTTP-a
-        public async void CreateNote( int notebookId)
-		{
+        // public async void CreateNote( int notebookId)     // int je od SQLite
+		public async void CreateNote(string notebookId)
+        {
 			Note newNote = new Note()
 			{
 				NotebookId = notebookId,
@@ -112,18 +113,24 @@ namespace EvernoteClone.ViewModel
 			GetNotes();
 		}
 
-		public void GetNotebooks()
-		{
-			var notebooks = DatabaseHelper.Read<Notebook>().Where(n => n.UserId == App.UserId).ToList();
+		// public void GetNotebooks()     // SQLite
+		public async void GetNotebooks()  // Google Firebase
+        {
+            // SQLite
+            // var notebooks = DatabaseHelper.Read<Notebook>().Where(n => n.UserId == App.UserId).ToList();
 
-			Notebooks.Clear();
+            // Google Firebase
+            var notebooks = (await DatabaseHelper.Read<Notebook>()).Where(n => n.UserId == App.UserId).ToList();
+
+            Notebooks.Clear();
 			foreach(var notebook in notebooks)
 			{
 				Notebooks.Add(notebook);
 			}
 		}
 
-        private void GetNotes()
+        // private void GetNotes()		// SQLite
+        private async void GetNotes()   // Google Firebase
         {
 			/* U sustini ista metoda kao GetNotebooks() iznad ove metode
 			 * Ne zelimo da prikazemo sve notes,
@@ -135,8 +142,12 @@ namespace EvernoteClone.ViewModel
 
 			if(SelectedNotebook != null)
 			{
+				// SQLite
 				// veliki komentar iznad se odnosi na sledeci red
-                var notes = DatabaseHelper.Read<Note>().Where(n => n.NotebookId == SelectedNotebook.Id).ToList();
+                // var notes = DatabaseHelper.Read<Note>().Where(n => n.NotebookId == SelectedNotebook.Id).ToList();
+
+				// Google Firebase
+                var notes = (await DatabaseHelper.Read<Note>()).Where(n => n.NotebookId == SelectedNotebook.Id).ToList();
 
                 Notes.Clear();
                 foreach (var note in notes)

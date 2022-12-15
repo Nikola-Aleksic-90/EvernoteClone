@@ -8,8 +8,10 @@ using System.Threading.Tasks;
 
 namespace EvernoteClone.Model
 {
-    public class Notebook : INotifyPropertyChanged
+    public class Notebook : INotifyPropertyChanged, HasId
     {
+        // SQLite
+        /*
         private int id;
         [PrimaryKey, AutoIncrement]
         public int Id
@@ -21,9 +23,37 @@ namespace EvernoteClone.Model
                 OnPropertyChanged("Id");
             }
         }
+        */
 
+        // Google Firebase
+        private string id;
+        public string Id
+        {
+            get { return id; }
+            set
+            {
+                id = value;
+                OnPropertyChanged("Id");
+            }
+        }
+
+        // SQLite
+        /*
         private string userId;
         [Indexed]
+        public string UserId
+        {
+            get { return userId; }
+            set
+            {
+                userId = value;
+                OnPropertyChanged("UserId");
+            }
+        }
+        */
+
+        // Google Firebase
+        private string userId;
         public string UserId
         {
             get { return userId; }
