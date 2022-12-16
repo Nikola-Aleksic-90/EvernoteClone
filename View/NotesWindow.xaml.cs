@@ -3,6 +3,7 @@ using EvernoteClone.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -158,9 +159,12 @@ namespace EvernoteClone.View
             viewModel.SelectedNote.FileLocation = rtfFile;
             DatabaseHelper.Update(viewModel.SelectedNote);
 
-            FileStream fileStream = new FileStream(rtfFile, FileMode.Create);
-            var contents = new TextRange(contentRichTextbox.Document.ContentStart, contentRichTextbox.Document.ContentEnd);
-            contents.Save(fileStream, DataFormats.Rtf);
+            using (FileStream fileStream = new FileStream(rtfFile, FileMode.Create))
+            {
+                var contents = new TextRange(contentRichTextbox.Document.ContentStart, contentRichTextbox.Document.ContentEnd);
+                contents.Save(fileStream, DataFormats.Rtf);
+            }
+            
         }
     }
 }
