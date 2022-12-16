@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -61,6 +62,8 @@ namespace EvernoteClone.ViewModel.Helpers
             }
         }
 
+        //SQLite
+        /*
         public static bool Update<T>(T item)
         {
             bool result = false;
@@ -79,8 +82,26 @@ namespace EvernoteClone.ViewModel.Helpers
 
             return result;
         }
+        */
 
+        // Google Firebase
+        public static async Task<bool> Update<T>(T item) where T : HasId
+        {
+            string jsonBody = JsonConvert.SerializeObject(item);
+            var content = new StringContent(jsonBody, Encoding.UTF8, "application/json");
 
+            using (var client = new HttpClient())
+            {
+                // item.GetType().Name.ToLower() koristimo jer ne znamo sta prosledjujemo (Notebook, Note ...) a ToLower je da se sve pise malim slovima
+                var result = await client.PatchAsync($"{dbPath}{item.GetType().Name.ToLower()}/{item.Id}.json", content);
+
+                if (result.IsSuccessStatusCode) return true;
+                else return false;
+            }
+        }
+
+        // SQLite
+        /*
         public static bool Delete<T>(T item)
         {
             bool result = false;
@@ -98,6 +119,20 @@ namespace EvernoteClone.ViewModel.Helpers
             }
 
             return result;
+        }
+        */
+
+        // Google Firebase
+        public static async Task<bool> Delete<T>(T item) where T : HasId
+        {
+            using (var client = new HttpClient())
+            {
+                // item.GetType().Name.ToLower() koristimo jer ne znamo sta prosledjujemo (Notebook, Note ...) a ToLower je da se sve pise malim slovima
+                var result = await client.DeleteAsync($"{dbPath}{item.GetType().Name.ToLower()}/{item.Id}.json");
+
+                if (result.IsSuccessStatusCode) return true;
+                else return false;
+            }
         }
 
         // Sqlite
