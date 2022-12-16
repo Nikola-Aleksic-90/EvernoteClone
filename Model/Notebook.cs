@@ -10,22 +10,6 @@ namespace EvernoteClone.Model
 {
     public class Notebook : INotifyPropertyChanged, HasId
     {
-        // SQLite
-        /*
-        private int id;
-        [PrimaryKey, AutoIncrement]
-        public int Id
-        {
-            get { return id; }
-            set
-            {
-                id = value;
-                OnPropertyChanged("Id");
-            }
-        }
-        */
-
-        // Google Firebase
         private string id;
         public string Id
         {
@@ -37,22 +21,6 @@ namespace EvernoteClone.Model
             }
         }
 
-        // SQLite
-        /*
-        private string userId;
-        [Indexed]
-        public string UserId
-        {
-            get { return userId; }
-            set
-            {
-                userId = value;
-                OnPropertyChanged("UserId");
-            }
-        }
-        */
-
-        // Google Firebase
         private string userId;
         public string UserId
         {
