@@ -1,4 +1,5 @@
-﻿using EvernoteClone.ViewModel;
+﻿using Azure.Storage.Blobs;
+using EvernoteClone.ViewModel;
 using EvernoteClone.ViewModel.Helpers;
 using System;
 using System.Collections.Generic;
@@ -63,7 +64,7 @@ namespace EvernoteClone.View
             }
         }
 
-        private void ViewModel_SelectedNoteChanged(object? sender, EventArgs e)
+        private async void ViewModel_SelectedNoteChanged(object sender, EventArgs e)
         {
             contentRichTextbox.Document.Blocks.Clear();
 
@@ -71,7 +72,11 @@ namespace EvernoteClone.View
             {
                 if (!string.IsNullOrEmpty(viewModel.SelectedNote.FileLocation))
                 {
-                    using (FileStream fileStream = new FileStream(viewModel.SelectedNote.FileLocation, FileMode.Open))
+                    // Downloadujemo Note da lokalno radimo sa njim
+                    string downloadPath = $"{viewModel.SelectedNote.Id}.rtf";
+                    await new BlobClient(new Uri(viewModel.SelectedNote.FileLocation)).DownloadToAsync(downloadPath);
+
+                    using (FileStream fileStream = new FileStream(downloadPath, FileMode.Open))
                     {
                         TextRange range = new TextRange(contentRichTextbox.Document.ContentStart, contentRichTextbox.Document.ContentEnd);
                         range.Load(fileStream, DataFormats.Rtf);
@@ -153,18 +158,34 @@ namespace EvernoteClone.View
             contentRichTextbox.Selection.ApplyPropertyValue(Inline.FontSizeProperty, fontSizeComboBox.Text);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        // Sacuvaj Note
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory, $"{viewModel.SelectedNote.Id}.rtf");
-            viewModel.SelectedNote.FileLocation = rtfFile;
-            DatabaseHelper.Update(viewModel.SelectedNote);
-
+            string fileName = $"{viewModel.SelectedNote.Id}.rtf";
+            string rtfFile = System.IO.Path.Combine(Environment.CurrentDirectory,fileName);
+            
             using (FileStream fileStream = new FileStream(rtfFile, FileMode.Create))
             {
                 var contents = new TextRange(contentRichTextbox.Document.ContentStart, contentRichTextbox.Document.ContentEnd);
                 contents.Save(fileStream, DataFormats.Rtf);
             }
-            
+
+            viewModel.SelectedNote.FileLocation = await UpdateFile(rtfFile, fileName);
+            await DatabaseHelper.Update(viewModel.SelectedNote);
+        }
+
+        private async Task<string> UpdateFile(string rtfFilePath , string fileName)
+        {
+            string connectionString = "DefaultEndpointsProtocol=https;AccountName=azurestoragewpfapp;AccountKey=e8iXz8yhqC2wy/Z/Z8ZF1cNovSADFxGlMHWHRMbBe5SBq3rYrdrjuBVnOwmPLN6M5Eyo301V6H60+AStL2C9Iw==;EndpointSuffix=core.windows.net";
+            string containerName = "notes"; // MORA da se poklapa sa nazivom container-a na Azure Storage
+
+            var container = new BlobContainerClient(connectionString, containerName);
+            // container.CreateIfNotExistsAsync();      // znamo da container postoji tako da ovo necemo koristiti
+
+            var blob = container.GetBlobClient(fileName);
+            await blob.UploadAsync(rtfFilePath);
+
+            return $"https://azurestoragewpfapp.blob.core.windows.net/notes/{fileName}";
         }
     }
 }

@@ -110,13 +110,8 @@ namespace EvernoteClone.ViewModel
 			GetNotes();
 		}
 
-		// public void GetNotebooks()     // SQLite
-		public async void GetNotebooks()  // Google Firebase
+		public async void GetNotebooks()
         {
-            // SQLite
-            // var notebooks = DatabaseHelper.Read<Notebook>().Where(n => n.UserId == App.UserId).ToList();
-
-            // Google Firebase
             var notebooks = (await DatabaseHelper.Read<Notebook>()).Where(n => n.UserId == App.UserId).ToList();
 
             Notebooks.Clear();
@@ -126,24 +121,17 @@ namespace EvernoteClone.ViewModel
 			}
 		}
 
-        // private void GetNotes()		// SQLite
-        private async void GetNotes()   // Google Firebase
+        private async void GetNotes()
         {
-			/* U sustini ista metoda kao GetNotebooks() iznad ove metode
-			 * Ne zelimo da prikazemo sve notes,
-			 * vec samo one koje pripadaju trenutno izabranom Notebook-u.
-			 * Zbog toga koristimo LINQ keyword Where.
-			 * Nakon toga vidimo da je var notes lokalna varijabla IEnumerable<Note> notes.
-			 * Zbog toga stavljamo .ToList() 
-			 * Mozda ima bolji ili laksi nacin ali JBG */
-
 			if(SelectedNotebook != null)
 			{
-				// SQLite
-				// veliki komentar iznad se odnosi na sledeci red
-                // var notes = DatabaseHelper.Read<Note>().Where(n => n.NotebookId == SelectedNotebook.Id).ToList();
-
-				// Google Firebase
+                /* U sustini ista metoda kao GetNotebooks() iznad ove metode
+				* Ne zelimo da prikazemo sve notes,
+				* vec samo one koje pripadaju trenutno izabranom Notebook-u.
+				* Zbog toga koristimo LINQ keyword Where.
+				* Nakon toga vidimo da je var notes lokalna varijabla IEnumerable<Note> notes.
+				* Zbog toga stavljamo .ToList() 
+				* Mozda ima bolji ili laksi nacin ali JBG */
                 var notes = (await DatabaseHelper.Read<Note>()).Where(n => n.NotebookId == SelectedNotebook.Id).ToList();
 
                 Notes.Clear();

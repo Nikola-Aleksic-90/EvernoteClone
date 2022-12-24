@@ -54,7 +54,7 @@
                                     <!-- StaticResource vm tri reda ispod se odnosi na Window.Resource na samom pocetku XAML-->
                                     <!-- Moramo ovako jer je po default-u to Notebooks (za ovaj ListView)-->
                                     <MenuItem Header="Rename"
-                                              Command="{Binding Source={StaticResource vm}, Path=EditCommand}"/>
+                                              Command="{Binding Source={StaticResource vm}, Path=EditCommand}"/>                                    
                                 </ContextMenu>
                             </uc:DisplayNotebook.ContextMenu>
                         </uc:DisplayNotebook>
@@ -117,9 +117,16 @@
         </ToolBarTray>
 
         <Grid>
-            <RichTextBox x:Name="contentRichTextbox"
-                         TextChanged="contentRichTextbox_TextChanged"
-                         SelectionChanged="contentRichTextbox_SelectionChanged"/>
+            <StackPanel>
+                <TextBox Margin="10"
+                         Text="{Binding Path=SelectedNote.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <RichTextBox x:Name="contentRichTextbox"
+                             Margin="10"
+                             TextChanged="contentRichTextbox_TextChanged"
+                             SelectionChanged="contentRichTextbox_SelectionChanged"/>
+
+            </StackPanel>
+            
         </Grid>
 
     </DockPanel>
